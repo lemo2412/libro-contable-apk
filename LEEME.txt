@@ -1,0 +1,61 @@
+LIBRO CONTABLE - Proyecto para generar el APK (Capacitor)
+Cuentas por cobrar: deudores, abonos, saldo y avisos cuando pasan días sin abonar.
+
+QUÉ NECESITAS INSTALAR EN TU COMPUTADORA (una sola vez)
+  1. Node.js 18 o superior  (https://nodejs.org)
+  2. Java JDK 17
+  3. Android Studio (incluye el Android SDK)  (https://developer.android.com/studio)
+
+PASOS (en una terminal, dentro de esta carpeta)
+  npm install
+  npx cap add android
+  node preparar-android.js       (agrega los permisos para que los avisos funcionen en segundo plano)
+  npx cap sync android
+  cd android
+  gradlew assembleDebug          (en Windows)   |   ./gradlew assembleDebug   (Mac/Linux)
+
+El APK queda en:
+  android/app/build/outputs/apk/debug/app-debug.apk
+
+GENERAR EL APK SIN INSTALAR NADA (con GitHub, gratis)
+  1. Crea una cuenta en https://github.com y un repositorio nuevo (privado está bien).
+  2. Sube todo el contenido de esta carpeta al repositorio (Add file > Upload files).
+  3. Verifica que exista el archivo .github/workflows/apk.yml. Si no se subió (por ser carpeta oculta),
+     crea el archivo en GitHub: Add file > Create new file, escribe el nombre  .github/workflows/apk.yml
+     y pega el contenido del archivo apk.yml de esta carpeta (está también en LEEME-apk.yml.txt).
+  4. Entra a la pestaña Actions > "Generar APK" > Run workflow. Tarda unos 5 a 10 minutos.
+  5. Al terminar, abre la ejecución y descarga "libro-contable-apk" (abajo, en Artifacts).
+     Dentro del zip está app-debug.apk. Instálalo en el teléfono como se explica abajo.
+
+INSTALARLO EN EL TELÉFONO
+  - Copia app-debug.apk al teléfono (cable, WhatsApp, Drive...).
+  - Ábrelo y permite "instalar apps de orígenes desconocidos" cuando lo pida.
+  - O con el teléfono conectado por USB y depuración USB activada:  adb install app-debug.apk
+
+ALTERNATIVA CON ANDROID STUDIO (con botones)
+  npx cap open android   ->   menú Build > Build Bundle(s)/APK(s) > Build APK(s)
+
+AVISOS DE ATRASO
+  - Al abrir la app por primera vez, acepta el permiso de notificaciones.
+  - Por cada persona con saldo pendiente, la app programa un aviso diario a la hora que elijas
+    en Configuración (por defecto 9:00). Empieza cuando se cumplen los días sin abonar
+    (por defecto 7). Al registrar un abono, el conteo se reinicia solo.
+  - Configuración > "Probar aviso" manda una notificación de prueba en 3 segundos.
+  - Los avisos quedan programados en el sistema de alarmas de Android, por eso llegan con la app
+    cerrada y también después de reiniciar el teléfono. La app no necesita estar abierta.
+  - Para que el teléfono no los bloquee, en la app ve a Configuración > "Permitir avisos en segundo
+    plano" y luego, en Ajustes del teléfono > Apps > Libro Contable > Batería, elige "Sin restricciones"
+    (en Xiaomi, Huawei, Samsung u Oppo también activa "Inicio automático" o quita la app de
+    "Apps en suspensión").
+  - Si no llegan avisos: Ajustes del teléfono > Apps > Libro Contable > Notificaciones (activar).
+  - Importante: la app reprograma los avisos cada vez que la abres o registras un abono. Si pasas
+    muchos días sin abrirla, los avisos ya programados siguen llegando, pero conviene abrirla de vez en cuando.
+
+PARA ACTUALIZAR LA APP DESPUÉS
+  Reemplaza www/index.html por la versión nueva, y ejecuta:  npx cap sync android
+  y vuelve a generar el APK.
+
+NOTAS
+  - Los datos se guardan dentro de la app, en ese teléfono. Si desinstalas la app o borras sus datos,
+    se pierden. Antes, usa Configuración > Respaldo > "Mostrar respaldo", copia el texto y guárdalo.
+    Para recuperar: pega el texto en el mismo cuadro y toca "Restaurar".
